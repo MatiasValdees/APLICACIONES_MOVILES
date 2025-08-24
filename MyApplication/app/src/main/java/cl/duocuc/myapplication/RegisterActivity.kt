@@ -101,8 +101,8 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre") },
-                    textStyle = TextStyle(fontSize = 20.sp),
+                    label = { Text("Nombre",fontSize = 26.sp) },
+                    textStyle = TextStyle(fontSize = 26.sp),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -110,8 +110,8 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = correo,
                     onValueChange = { correo = it },
-                    label = { Text("Correo electrónico") },
-                    textStyle = TextStyle(fontSize = 20.sp),
+                    label = { Text("Correo electrónico",fontSize = 26.sp) },
+                    textStyle = TextStyle(fontSize = 26.sp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -120,7 +120,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = contrasena,
                     onValueChange = { contrasena = it },
-                    label = { Text("Contraseña") },
+                    label = { Text("Contraseña",fontSize = 26.sp) },
                     textStyle = TextStyle(fontSize = 20.sp),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -129,13 +129,13 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = aceptaTerminos, onCheckedChange = { aceptaTerminos = it })
+                    Checkbox(checked = aceptaTerminos, onCheckedChange = { aceptaTerminos = it },)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Acepto los términos y condiciones", fontSize = 18.sp)
+                    Text("Acepto los términos y condiciones", fontSize = 24.sp)
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Género", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                Spacer(modifier = Modifier.height(22.dp))
+                Text("Género", fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 opcionesGenero.forEach { opcion ->
                     Row(
                         Modifier
@@ -152,11 +152,11 @@ fun RegisterScreen(
                             onClick = { generoSeleccionado = opcion }
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = opcion, fontSize = 18.sp)
+                        Text(text = opcion, fontSize = 24.sp)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(22.dp))
                 ExposedDropdownMenuBox(
                     expanded = expanded,
                     onExpandedChange = { expanded = !expanded }
@@ -165,7 +165,7 @@ fun RegisterScreen(
                         value = paisSeleccionado,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("País") },
+                        label = { Text("País", fontSize = 24.sp) },
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                         },
@@ -177,7 +177,7 @@ fun RegisterScreen(
                     ) {
                         paises.forEach { opcion ->
                             DropdownMenuItem(
-                                text = { Text(opcion) },
+                                text = { Text(opcion, fontSize = 26.sp) },
                                 onClick = {
                                     paisSeleccionado = opcion
                                     expanded = false

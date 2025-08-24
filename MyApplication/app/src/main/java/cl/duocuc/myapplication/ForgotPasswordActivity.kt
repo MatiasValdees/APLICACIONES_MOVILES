@@ -90,9 +90,9 @@ fun ForgotPasswordScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Correo electrónico", fontSize = 22.sp) },
+                    label = { Text("Correo electrónico", fontSize = 26.sp) },
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 24.sp),
+                    textStyle = TextStyle(fontSize = 26.sp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth()
                 )

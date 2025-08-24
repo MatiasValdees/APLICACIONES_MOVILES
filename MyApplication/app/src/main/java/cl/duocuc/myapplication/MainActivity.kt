@@ -51,7 +51,7 @@ fun LoginScreen(
 
         Text(
             text = "Bienvenido",
-            fontSize = 36.sp,
+            fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -62,9 +62,9 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Correo", fontSize = 18.sp) },
+            label = { Text("Correo", fontSize = 26.sp) },
             singleLine = true,
-            textStyle = TextStyle(fontSize = 20.sp),
+            textStyle = TextStyle(fontSize = 26.sp),
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -77,9 +77,9 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña", fontSize = 18.sp) },
+            label = { Text("Contraseña", fontSize = 26.sp) },
             singleLine = true,
-            textStyle = TextStyle(fontSize = 20.sp),
+            textStyle = TextStyle(fontSize = 26.sp),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -114,7 +114,7 @@ fun LoginScreen(
             ) {
                 Text(
                     "¿Olvidaste tu contraseña?",
-                    fontSize = 22.sp,
+                    fontSize = 26.sp,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -126,7 +126,7 @@ fun LoginScreen(
             ) {
                 Text(
                     "Crear cuenta",
-                    fontSize = 22.sp,
+                    fontSize = 26.sp,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.fillMaxWidth()
                 )
