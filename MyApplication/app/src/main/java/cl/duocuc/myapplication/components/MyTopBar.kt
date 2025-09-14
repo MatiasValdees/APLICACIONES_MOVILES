@@ -15,10 +15,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.runtime.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,10 +33,34 @@ fun MyTopBar(
     onLogout: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text(text = "Cerrar sesión") },
+            text = { Text("¿Estás seguro de que deseas cerrar sesión?") },
+            confirmButton = {
+                Button(onClick = {
+                    showLogoutDialog = false
+                    onLogout()
+                    navController?.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }) {
+                    Text("Sí")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showLogoutDialog = false }) {
+                    Text("No")
+                }
+            }
+        )
+    }
+
     TopAppBar(
-        title = {
-            Text(title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-        },
+        title = { Text(title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold) },
         navigationIcon = {
             if (showBack && navController != null) {
                 IconButton(onClick = { navController.popBackStack() }) {
@@ -46,7 +73,7 @@ fun MyTopBar(
         },
         actions = {
             if (showLogout) {
-                IconButton(onClick = { onLogout() }) {
+                IconButton(onClick = { showLogoutDialog = true }) {
                     Icon(
                         imageVector = Icons.Filled.ExitToApp,
                         contentDescription = "Cerrar sesión"
@@ -63,16 +90,4 @@ fun MyTopBar(
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         )
     )
-}
-
-@Composable
-@Preview
-fun TopBarPreview() {
-    MaterialTheme {
-        MyTopBar(
-            title = "Home",
-            showLogout = true,
-            onLogout = { }
-        )
-    }
 }

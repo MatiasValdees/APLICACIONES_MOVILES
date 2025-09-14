@@ -42,8 +42,9 @@ fun CheckInScreen(navController: NavController? = null) {
         topBar = {
             MyTopBar(
                 title = "Llegada de Vehículos",
-                navController = null,
-                showLogout = true
+                navController = navController,
+                showLogout = true,
+                showBack = false
             )
         },
         content = { padding ->
