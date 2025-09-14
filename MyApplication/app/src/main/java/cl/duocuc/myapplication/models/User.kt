@@ -1,5 +1,4 @@
-package cl.duocuc.myapplication
-
+package cl.duocuc.myapplication.models
 
 data class User(
     val nombre: String,

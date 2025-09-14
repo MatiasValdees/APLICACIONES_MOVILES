@@ -1,4 +1,4 @@
-package cl.duocuc.myapplication
+package cl.duocuc.myapplication.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import cl.duocuc.myapplication.navigation.AppRoutes
+import cl.duocuc.myapplication.navigation.Routes
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

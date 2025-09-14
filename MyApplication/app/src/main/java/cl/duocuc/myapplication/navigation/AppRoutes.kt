@@ -1,4 +1,4 @@
-package cl.duocuc.myapplication
+package cl.duocuc.myapplication.navigation
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
@@ -7,6 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cl.duocuc.myapplication.models.User
+import cl.duocuc.myapplication.screens.ForgotPasswordScreen
+import cl.duocuc.myapplication.screens.LoginScreen
+import cl.duocuc.myapplication.screens.RegisterActivity
+import cl.duocuc.myapplication.screens.RegisterScreen
 
 object Routes {
     const val LOGIN = "login"
@@ -31,7 +36,11 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                     if (usuarioValido) {
                         Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Usuario o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             )
@@ -48,7 +57,8 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                         RegisterActivity.users.add(
                             User(nombre, correo, contrasena, genero, pais)
                         )
-                        Toast.makeText(context, "Usuario creado con éxito", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Usuario creado con éxito", Toast.LENGTH_SHORT)
+                            .show()
                         navController.popBackStack() // vuelve al login después de registrar
                     }
                 },
@@ -63,7 +73,11 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                     // Aquí podrías validar si existe el usuario antes
                     val existe = RegisterActivity.users.any { it.correo == email }
                     if (existe) {
-                        Toast.makeText(context, "Se envió un correo de recuperación", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Se envió un correo de recuperación",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         Toast.makeText(context, "Correo no registrado", Toast.LENGTH_SHORT).show()
                     }

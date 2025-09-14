@@ -1,4 +1,4 @@
-package cl.duocuc.myapplication
+package cl.duocuc.myapplication.screens
 
 import android.os.Bundle
 import android.widget.Toast
