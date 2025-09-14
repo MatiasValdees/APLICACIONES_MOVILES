@@ -33,6 +33,13 @@ class RegisterActivity : ComponentActivity() {
                 contrasena = "1234",
                 genero = "Masculino",
                 pais = "Chile"
+            ),
+            User(
+                nombre = "miguel",
+                correo = "miguel@duocuc.cl",
+                contrasena = "duoc",
+                genero = "Masculino",
+                pais = "Chile"
             )
         )
     }
