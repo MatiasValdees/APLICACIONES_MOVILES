@@ -20,7 +20,7 @@ object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val FORGOT_PASSWORD = "forgot_password"
-    const val CHECK_IN = "check-in"
+    const val CHECK_IN = "check-in/{username}"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -39,7 +39,8 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                     }
                     if (usuarioValido) {
                         Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
-                        navController.navigate(Routes.CHECK_IN) {
+                        val usuario = RegisterActivity.users.first { it.correo == email }
+                        navController.navigate("check-in/${usuario.nombre}"){
                             popUpTo(Routes.LOGIN) { inclusive = true }
                         }
                     } else {
@@ -90,8 +91,11 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
             )
         }
 
-        composable(Routes.CHECK_IN) {
-            CheckInScreen(navController = navController)
+        composable(
+            "check-in/{username}"
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            CheckInScreen(navController = navController, username = username)
         }
     }
 }

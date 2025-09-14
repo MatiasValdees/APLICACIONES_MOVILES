@@ -10,7 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -20,15 +23,16 @@ import cl.duocuc.myapplication.components.MyTopBar
 import cl.duocuc.myapplication.models.CheckIn
 import cl.duocuc.myapplication.utils.toDDMMYYYYHHmmss
 import java.time.LocalDateTime
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CheckInScreen(navController: NavController? = null) {
+fun CheckInScreen(navController: NavController? = null,username:String) {
     var checkIns by remember { mutableStateOf(listOf<CheckIn>()) }
     var patentInput by remember { mutableStateOf("") }
     var selectedCheckIn by remember { mutableStateOf<CheckIn?>(null) }
     val valuePerMinute = 100
-    val context = LocalContext.current // Contexto para Toast
+    val context = LocalContext.current
 
     fun addCheckIn(patent: String) {
         if (patent.length < 6) {
@@ -62,6 +66,23 @@ fun CheckInScreen(navController: NavController? = null) {
                     .padding(horizontal = 28.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = buildAnnotatedString {
+                            append("Bienvenido, ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(username.uppercase(Locale.ROOT))
+                            }
+                            append(" !")
+                        },
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(45.dp))
+
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -145,5 +166,5 @@ fun CheckInScreen(navController: NavController? = null) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CheckInScreenPreview() {
-    CheckInScreen()
+    CheckInScreen(null, username = "matias")
 }
