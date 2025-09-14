@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import cl.duocuc.myapplication.components.MyTopBar
 import cl.duocuc.myapplication.models.User
 
 class RegisterActivity : ComponentActivity() {
 
     companion object {
-        val users = mutableStateListOf<User>()
+        val users = mutableStateListOf(
+            User(
+                nombre = "matias",
+                correo = "matias",
+                contrasena = "1234",
+                genero = "Masculino",
+                pais = "Chile"
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,19 +77,9 @@ fun RegisterScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Registro", fontSize = 20.sp, fontWeight = FontWeight.SemiBold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController?.popBackStack() }) {
-                        Icon( imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás" ) } },
-                modifier = Modifier.height(56.dp) ,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+            MyTopBar(
+                title = "Registro",
+                navController = navController
             )
         },
         content = { padding ->

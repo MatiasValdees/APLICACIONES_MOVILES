@@ -1,6 +1,8 @@
 package cl.duocuc.myapplication.navigation
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -8,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.duocuc.myapplication.models.User
+import cl.duocuc.myapplication.screens.CheckInScreen
 import cl.duocuc.myapplication.screens.ForgotPasswordScreen
 import cl.duocuc.myapplication.screens.LoginScreen
 import cl.duocuc.myapplication.screens.RegisterActivity
@@ -17,15 +20,16 @@ object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val FORGOT_PASSWORD = "forgot_password"
+    const val CHECK_IN = "check-in"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppRoutes(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = Routes.LOGIN) {
 
-        // Pantalla Login
         composable(Routes.LOGIN) {
             LoginScreen(
                 navController = navController,
@@ -35,6 +39,9 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                     }
                     if (usuarioValido) {
                         Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
+                        navController.navigate(Routes.CHECK_IN) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
                     } else {
                         Toast.makeText(
                             context,
@@ -46,7 +53,6 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
             )
         }
 
-        // Pantalla Registro
         composable(Routes.REGISTER) {
             RegisterScreen(
                 onRegister = { nombre, correo, contrasena, genero, pais ->
@@ -59,18 +65,16 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                         )
                         Toast.makeText(context, "Usuario creado con éxito", Toast.LENGTH_SHORT)
                             .show()
-                        navController.popBackStack() // vuelve al login después de registrar
+                        navController.popBackStack()
                     }
                 },
                 navController = navController
             )
         }
 
-        // Pantalla Recuperar contraseña
         composable(Routes.FORGOT_PASSWORD) {
             ForgotPasswordScreen(
                 onSendReset = { email ->
-                    // Aquí podrías validar si existe el usuario antes
                     val existe = RegisterActivity.users.any { it.correo == email }
                     if (existe) {
                         Toast.makeText(
@@ -84,6 +88,10 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
                 },
                 navController = navController
             )
+        }
+
+        composable(Routes.CHECK_IN) {
+            CheckInScreen(navController = navController)
         }
     }
 }
