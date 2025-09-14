@@ -1,6 +1,7 @@
 package cl.duocuc.myapplication.screens
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,8 +28,13 @@ fun CheckInScreen(navController: NavController? = null) {
     var patentInput by remember { mutableStateOf("") }
     var selectedCheckIn by remember { mutableStateOf<CheckIn?>(null) }
     val valuePerMinute = 100
+    val context = LocalContext.current // Contexto para Toast
 
     fun addCheckIn(patent: String) {
+        if (patent.length < 6) {
+            Toast.makeText(context, "La patente debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+            return
+        }
         if (patent.isNotBlank()) {
             val newCheckIn = CheckIn(
                 patent = patent.uppercase(),
@@ -131,7 +138,6 @@ fun CheckInScreen(navController: NavController? = null) {
         }
     )
 }
-
 
 
 
