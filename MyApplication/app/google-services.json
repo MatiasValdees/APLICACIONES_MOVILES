@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "273717406393",
+    "project_id": "simpleapp-381cf",
+    "storage_bucket": "simpleapp-381cf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273717406393:android:10a7ad43c54ab57fde8968",
+        "android_client_info": {
+          "package_name": "cl.duocuc.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnmvqjbfjwG_zUKyOugQhmHseHi1NWSfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
