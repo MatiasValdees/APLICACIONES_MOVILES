@@ -1,9 +1,6 @@
 package cl.duocuc.myapplication.screens
 
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -18,41 +15,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cl.duocuc.myapplication.components.MyTopBar
-
-class ForgotPasswordActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                ForgotPasswordScreen(
-                    onSendReset = { email ->
-                        val usuarioExiste = RegisterActivity.users.any { it.correo == email }
-                        if (usuarioExiste) {
-                            Toast.makeText(this, "Se envió un enlace a $email", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "El correo no está registrado", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    navController = null
-                )
-            }
-        }
-    }
-}
+import cl.duocuc.myapplication.data.UserDao
+import cl.duocuc.myapplication.data.UserEntity
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
-    onSendReset: (String) -> Unit,
+    userDao: UserDao,
     navController: NavController? = null
 ) {
     var email by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             MyTopBar(
-                title = "Recuperacion de Contraseña",
+                title = "Recuperación de Contraseña",
                 navController = navController
             )
         },
@@ -85,7 +65,22 @@ fun ForgotPasswordScreen(
                 Button(
                     onClick = {
                         if (email.isNotEmpty()) {
-                            onSendReset(email.trim())
+                            scope.launch {
+                                val user = userDao.findByEmail(email.trim())
+                                if (user != null) {
+                                    Toast.makeText(
+                                        context,
+                                        "Se envió un enlace a ${user.correo}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "El correo no está registrado",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
                         } else {
                             Toast.makeText(context, "Ingrese un correo", Toast.LENGTH_SHORT).show()
                         }
@@ -105,10 +100,13 @@ fun ForgotPasswordScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ForgotPasswordScreenPreview() {
-    MaterialTheme {
-        ForgotPasswordScreen(
-            onSendReset = {},
-            navController = null
-        )
-    }
+    // Para preview se puede pasar un DAO falso vacío
+    ForgotPasswordScreen(
+        userDao = object : UserDao {
+            override suspend fun insert(usuario: UserEntity) {}
+            override suspend fun findByEmail(correo: String) = null
+            override suspend fun login(email: String, password: String) = null
+        },
+        navController = null
+    )
 }

@@ -1,9 +1,5 @@
 package cl.duocuc.myapplication.screens
 
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,53 +17,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import cl.duocuc.myapplication.components.MyTopBar
-import cl.duocuc.myapplication.models.User
-
-class RegisterActivity : ComponentActivity() {
-
-    companion object {
-        val users = mutableStateListOf(
-            User(
-                nombre = "matias",
-                correo = "matias",
-                contrasena = "1234",
-                genero = "Masculino",
-                pais = "Chile"
-            ),
-            User(
-                nombre = "miguel",
-                correo = "miguel@duocuc.cl",
-                contrasena = "duoc",
-                genero = "Masculino",
-                pais = "Chile"
-            )
-        )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                RegisterScreen(
-                    onRegister = { nombre, correo, contrasena, genero, pais ->
-                        if (users.size < 5) {
-                            users.add(User(nombre, correo, contrasena, genero, pais))
-                            Toast.makeText(this, "Usuario registrado", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "Máximo 5 usuarios", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    navController = null
-                )
-            }
-        }
-    }
-}
+import cl.duocuc.myapplication.data.UserEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    onRegister: (String, String, String, String, String) -> Unit,
+    onRegister: (UserEntity) -> Unit,
     navController: NavController? = null
 ) {
     var nombre by remember { mutableStateOf("") }
@@ -104,7 +59,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre",fontSize = 26.sp) },
+                    label = { Text("Nombre", fontSize = 26.sp) },
                     textStyle = TextStyle(fontSize = 26.sp),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -113,7 +68,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = correo,
                     onValueChange = { correo = it },
-                    label = { Text("Correo electrónico",fontSize = 26.sp) },
+                    label = { Text("Correo electrónico", fontSize = 26.sp) },
                     textStyle = TextStyle(fontSize = 26.sp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth()
@@ -123,7 +78,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = contrasena,
                     onValueChange = { contrasena = it },
-                    label = { Text("Contraseña",fontSize = 26.sp) },
+                    label = { Text("Contraseña", fontSize = 26.sp) },
                     textStyle = TextStyle(fontSize = 20.sp),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -132,7 +87,7 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = aceptaTerminos, onCheckedChange = { aceptaTerminos = it },)
+                    Checkbox(checked = aceptaTerminos, onCheckedChange = { aceptaTerminos = it })
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Acepto los términos y condiciones", fontSize = 24.sp)
                 }
@@ -193,7 +148,14 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(30.dp))
                 Button(
                     onClick = {
-                        onRegister(nombre, correo, contrasena, generoSeleccionado, paisSeleccionado)
+                        val user = UserEntity(
+                            nombre = nombre,
+                            correo = correo,
+                            contrasena = contrasena,
+                            genero = generoSeleccionado,
+                            pais = paisSeleccionado
+                        )
+                        onRegister(user)
                     },
                     enabled = nombre.isNotEmpty() &&
                             correo.isNotEmpty() &&
@@ -206,7 +168,6 @@ fun RegisterScreen(
                 ) {
                     Text("Registrar", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
-
             }
         }
     )
@@ -215,5 +176,5 @@ fun RegisterScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen(onRegister = { _, _, _, _, _ -> }, navController = null)
+    RegisterScreen(onRegister = { _ -> }, navController = null)
 }

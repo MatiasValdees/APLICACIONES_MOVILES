@@ -1,5 +1,6 @@
 package cl.duocuc.myapplication.screens
 
+import cl.duocuc.myapplication.data.CheckInEntity
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -14,38 +15,56 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cl.duocuc.myapplication.components.MyCard
 import cl.duocuc.myapplication.components.MyTopBar
-import cl.duocuc.myapplication.models.CheckIn
+import cl.duocuc.myapplication.data.CheckInDao
 import cl.duocuc.myapplication.utils.toDDMMYYYYHHmmss
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CheckInScreen(navController: NavController? = null,username:String) {
-    var checkIns by remember { mutableStateOf(listOf<CheckIn>()) }
+fun CheckInScreen(
+    navController: NavController? = null,
+    username: String,
+    checkInDao: CheckInDao
+) {
+    var checkIns by remember { mutableStateOf(listOf<CheckInEntity>()) }
     var patentInput by remember { mutableStateOf("") }
-    var selectedCheckIn by remember { mutableStateOf<CheckIn?>(null) }
+    var selectedCheckIn by remember { mutableStateOf<CheckInEntity?>(null) }
     val valuePerMinute = 100
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        checkIns = checkInDao.getAll()
+    }
 
     fun addCheckIn(patent: String) {
         if (patent.length < 6) {
             Toast.makeText(context, "La patente debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
             return
         }
-        if (patent.isNotBlank()) {
-            val newCheckIn = CheckIn(
-                patent = patent.uppercase(),
-                createAt = LocalDateTime.now()
-            )
-            checkIns = checkIns + newCheckIn
-            patentInput = ""
+        val newCheckIn = CheckInEntity(
+            patent = patent.uppercase(),
+            createdAt = LocalDateTime.now()
+        )
+        scope.launch {
+            checkInDao.insert(newCheckIn)
+            checkIns = checkInDao.getAll()
+        }
+        patentInput = ""
+    }
+
+    fun deleteCheckIn(checkIn: CheckInEntity) {
+        scope.launch {
+            checkInDao.deleteById(checkIn.id)
+            checkIns = checkInDao.getAll()
         }
     }
 
@@ -81,8 +100,8 @@ fun CheckInScreen(navController: NavController? = null,username:String) {
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.height(45.dp))
-
                 }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -119,7 +138,7 @@ fun CheckInScreen(navController: NavController? = null,username:String) {
                     items(checkIns) { checkIn ->
                         MyCard(
                             title = "Patente: ${checkIn.patent}",
-                            subtitle = "Llegada: ${toDDMMYYYYHHmmss(checkIn.createAt)}",
+                            subtitle = "Llegada: ${toDDMMYYYYHHmmss(checkIn.createdAt)}",
                             labelButton = "Calcular",
                             onClick = { selectedCheckIn = checkIn }
                         )
@@ -127,7 +146,7 @@ fun CheckInScreen(navController: NavController? = null,username:String) {
                 }
 
                 selectedCheckIn?.let { checkIn ->
-                    val minutes = java.time.Duration.between(checkIn.createAt, LocalDateTime.now()).toMinutes()
+                    val minutes = java.time.Duration.between(checkIn.createdAt, LocalDateTime.now()).toMinutes()
                     val total = minutes * valuePerMinute
                     AlertDialog(
                         onDismissRequest = { selectedCheckIn = null },
@@ -142,7 +161,7 @@ fun CheckInScreen(navController: NavController? = null,username:String) {
                         },
                         confirmButton = {
                             Button(onClick = {
-                                checkIns = checkIns.filter { it != checkIn }
+                                deleteCheckIn(checkIn)
                                 selectedCheckIn = null
                             }) {
                                 Text("Liberar")
@@ -160,11 +179,17 @@ fun CheckInScreen(navController: NavController? = null,username:String) {
     )
 }
 
-
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CheckInScreenPreview() {
-    CheckInScreen(null, username = "matias")
+    CheckInScreen(
+        navController = null,
+        username = "matias",
+        checkInDao = object : CheckInDao {
+            override suspend fun insert(checkIn: CheckInEntity) {}
+            override suspend fun getAll(): List<CheckInEntity> = listOf()
+            override suspend fun deleteById(id: Int) {}
+        }
+    )
 }
