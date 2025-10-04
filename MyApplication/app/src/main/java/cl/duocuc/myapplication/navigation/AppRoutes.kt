@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.duocuc.myapplication.data.AppDatabase
-import cl.duocuc.myapplication.data.SignupDbHelper
+import cl.duocuc.myapplication.helpers.CommandDbHelper
 import cl.duocuc.myapplication.screens.CheckInScreen
 import cl.duocuc.myapplication.screens.ForgotPasswordScreen
 import cl.duocuc.myapplication.screens.LoginScreen
@@ -32,7 +32,7 @@ fun AppRoutes(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
     val userDao = remember { db.usuarioDao() }
-    val helper = remember { SignupDbHelper(userDao) }
+    val helper = remember { CommandDbHelper(userDao) }
     val checkInDao = db.checkInDao()
     val scope = rememberCoroutineScope()
     Log.d("RoomDB", "DB path: ${context.getDatabasePath("app_db").absolutePath}")

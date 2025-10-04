@@ -1,6 +1,9 @@
-package cl.duocuc.myapplication.data
+package cl.duocuc.myapplication.helpers
 
-class SignupDbHelper(private val userDao: UserDao) {
+import cl.duocuc.myapplication.data.UserDao
+import cl.duocuc.myapplication.data.UserEntity
+
+class CommandDbHelper(private val userDao: UserDao) {
 
     data class ValidationResult(
         val ok: Boolean,
